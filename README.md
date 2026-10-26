@@ -1,4 +1,5 @@
 Bichos Survivor- Survival Bugs
+
 Es un juego parecido a Pokesurvivor pero con su propia esencia
 
 BICHOS SURVIVOR
