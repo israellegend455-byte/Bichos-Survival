@@ -10,6 +10,9 @@ El objetivo consiste en seleccionar a un bicho compañero, sobrevivir a masivas 
 Características Principales
 
 • Máxima Accesibilidad: Totalmente optimizado para correr a 60 FPS estables sin lag directo en el navegador. Es compatible con controles de Xbox, PlayStation, teclado (WASD) y pantallas táctiles para dispositivos móviles.
+
 • Modo Cooperativo (COOP): Sistema multijugador en línea integrado mediante códigos de sala de 4 letras para sobrevivir en equipo junto a tus amigos.
+
 • Sistema de Progreso Justo: Incluye un Pase de Batalla gratuito de 30 niveles con recompensas exclusivas, un sistema Gacha para invocar nuevos bichos y un apartado de mejoras permanentes utilizando las monedas conseguidas en el juego.
+
 • Coleccionismo y Desafío: Cuenta con más de 40 bichos únicos divididos en una tabla de clasificación (Tier List) competitiva, variantes Shiny (Brillantes) ultra raras y un Ranking global en tiempo real para registrar los mejores tiempos de supervivencia.
