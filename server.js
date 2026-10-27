@@ -79,31 +79,41 @@ server.on('upgrade',(req,sock)=>{
   connect(ws);
 });
 const rooms={};
+const isOwner=k=>!!(process.env.OWNER_KEY&&String(k||'').trim().toUpperCase()===process.env.OWNER_KEY.trim().toUpperCase());
 const mkCode=()=>{const A='ABCDEFGHJKLMNPQRSTUVWXYZ';let c;do{c='';for(let i=0;i<4;i++)c+=A[Math.floor(Math.random()*A.length)];}while(rooms[c]);return c;};
 const tx=(ws,o)=>{if(ws&&ws.readyState===1)ws.send(JSON.stringify(o));};
 const txr=(ws,raw)=>{if(ws&&ws.readyState===1)ws.send(raw);};
+const bcast=(r,raw)=>{for(const w of r.slots)txr(w,raw);};
+/* sala: 1 host + hasta 3 invitados (slots 1..3). El host manda; el servidor solo reenvia. */
 function connect(ws){
   ws.on('message',raw=>{
     let m;try{m=JSON.parse(raw);}catch(e){return;}
+    if(!m||typeof m!=='object')return;
     if(m.t==='create'){
-      if(ws.room)return;const c=mkCode();rooms[c]={host:ws,guest:null,name:String(m.name||'Host').slice(0,14)};ws.room=c;ws.role='host';tx(ws,{t:'room',code:c});return;
+      if(ws.room)return;const c=mkCode();rooms[c]={host:ws,slots:[null,null,null],name:String(m.name||'Host').slice(0,14),started:false};ws.room=c;ws.role='host';ws.own=isOwner(m.ok);tx(ws,{t:'room',code:c,own:ws.own});return;
     }
     if(m.t==='join'){
+      if(ws.room)return;
       const c=String(m.code||'').toUpperCase().trim(),r=rooms[c];
       if(!r)return tx(ws,{t:'err',msg:'Esa sala no existe'});
-      if(r.guest)return tx(ws,{t:'err',msg:'La sala ya está llena'});
       if(r.started)return tx(ws,{t:'err',msg:'La partida ya empezó'});
-      r.guest=ws;ws.room=c;ws.role='guest';
-      tx(ws,{t:'joined',code:c,host:r.name});tx(r.host,{t:'peer',name:String(m.name||'Amigo').slice(0,14),kind:String(m.kind||'').slice(0,20),sh:!!m.sh,pre:m.pre||null});return;
+      const i=r.slots.indexOf(null);if(i<0)return tx(ws,{t:'err',msg:'La sala ya está llena'});
+      r.slots[i]=ws;ws.room=c;ws.role='guest';ws.idx=i+1;ws.own=isOwner(m.ok);
+      tx(ws,{t:'joined',code:c,idx:i+1,host:r.name,own:ws.own});
+      tx(r.host,{t:'peer',f:i+1,own:ws.own,name:String(m.name||'Amigo').slice(0,14),kind:String(m.kind||'').slice(0,20),sh:!!m.sh,pre:m.pre||null});return;
     }
     const r=rooms[ws.room];if(!r)return;
-    if(ws.role==='host'){if(m.t==='start')r.started=true;if(m.t==='over')r.started=false;txr(r.guest,raw);}
-    else txr(r.host,raw);
+    if(ws.role==='host'){
+      if(m.t==='start')r.started=true;if(m.t==='over')r.started=false;
+      if(m.to>=1&&m.to<=3)txr(r.slots[m.to-1],raw);else bcast(r,raw);
+    }else{
+      m.f=ws.idx;txr(r.host,JSON.stringify(m));
+    }
   });
   ws.on('close',()=>{
     const r=rooms[ws.room];if(!r)return;
-    if(ws.role==='host'){tx(r.guest,{t:'closed'});if(r.guest){r.guest.room=null;}delete rooms[ws.room];}
-    else{r.guest=null;r.started=false;tx(r.host,{t:'left'});}
+    if(ws.role==='host'){bcast(r,JSON.stringify({t:'closed'}));for(const w of r.slots)if(w)w.room=null;delete rooms[ws.room];}
+    else{r.slots[ws.idx-1]=null;tx(r.host,{t:'left',f:ws.idx});}
   });
 }
 setInterval(()=>{clients.forEach(ws=>{if(!ws.alive)return ws.terminate();ws.alive=false;ws.ping();});},25000);
