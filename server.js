@@ -33,6 +33,11 @@ const server=http.createServer((req,res)=>{
     return;
   }
   if(u.pathname==='/salud')return send(res,200,{ok:true,jugadores:Object.keys(DB).length,salas:Object.keys(rooms).length});
+  if(req.method==='GET'&&/^\/audio\/(menu|play|rift|stand|lms|creator)\.mp3$/.test(u.pathname)){
+    try{const fp=path.join(__dirname,u.pathname),st=fs.statSync(fp),r=req.headers.range,h={'Content-Type':'audio/mpeg','Accept-Ranges':'bytes','Cache-Control':'public, max-age=86400'};
+      if(r){const m=/bytes=(\d*)-(\d*)/.exec(r),s0=m[1]?+m[1]:0,e0=m[2]?+m[2]:st.size-1;res.writeHead(206,Object.assign(h,{'Content-Range':'bytes '+s0+'-'+e0+'/'+st.size,'Content-Length':e0-s0+1}));return fs.createReadStream(fp,{start:s0,end:e0}).pipe(res);}
+      res.writeHead(200,Object.assign(h,{'Content-Length':st.size}));return fs.createReadStream(fp).pipe(res);}catch(e){return send(res,404,{error:'no audio'});}
+  }
   if(req.method==='GET'&&(u.pathname==='/'||u.pathname==='/index.html')){
     try{const h=fs.readFileSync(path.join(__dirname,'index.html'));res.writeHead(200,{'Content-Type':'text/html; charset=utf-8','Cache-Control':'no-cache'});return res.end(h);}catch(e){return send(res,500,{error:'falta index.html'});}
   }
