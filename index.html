@@ -293,6 +293,8 @@ button{font-family:inherit;color:inherit}
 #cards .kn{margin-left:auto;font-family:var(--f-display);font-size:10px;padding:2px 6px;border-radius:5px;background:#0007;color:#fff;border:1px solid #fff5}
 @media (min-width:1000px) and (min-height:560px){.ov{zoom:1.3}}
 @media (min-width:1500px) and (min-height:800px){.ov{zoom:1.6}}
+@media (min-width:1800px) and (min-height:980px){#menu{zoom:2.1}}
+@media (min-width:2400px) and (min-height:1300px){#menu{zoom:2.8}}
 /*MENU2END*/
 #nw{z-index:30;background:linear-gradient(160deg,#2e0f44,#12101f 60%,#3a1a08)!important}
 #nw .nwi{display:flex;gap:10px;align-items:flex-start;background:#ffffff12;border:1px solid #ff8a1a44;border-radius:10px;padding:9px 11px;margin-bottom:7px;font-size:13.5px;line-height:1.45}
@@ -1291,7 +1293,7 @@ function swapPlayers(i=1){const g=G,c=g.ps[i];for(const k of SWK){const t=g[k];g
 function asGuest(fn,i=1){const g=G;if(!g||!g.ps||!g.ps[i])return;swapPlayers(i);try{fn();}finally{if(CUR===i)swapPlayers(i);}}
 function eachG(fn){const g=G;if(!g||!g.ps)return;for(let i=1;i<4;i++){const c=g.ps[i];if(c)asGuest(()=>fn(i,c),i);}}
 const MN=[1,1,1.5,2,2.5];
-const tfOf=m=>m>4?Math.pow(1.14,Math.min(m,45)-4)*(m>45?Math.max(.45,1-(m-45)*.05):1):1;
+const tfOf=m=>m>4?Math.pow(1.14,Math.min(m,50)-4)*(m>50?Math.max(.45,1-(m-50)*.05):1):1;
 function nPl(){const g=G;let n=1;for(let i=1;i<4;i++)if(g.ps[i]&&!g.ps[i].gone)n++;return n;}
 function pickTarget(){const g=G,L=[g.p];for(let i=1;i<4;i++)if(g.ps[i]&&!g.ps[i].gone)L.push(g.ps[i].p);const A=L.filter(q=>!q.dead),l=A.length?A:L;return l[Math.floor(Math.random()*l.length)];}
 const SPEC={n:0};
@@ -1630,7 +1632,7 @@ function burst(x,y,n,col){
   for(let i=0;i<n;i++){const a=rnd(0,6.28),s=rnd(15,50);g.fx.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,life:rnd(.25,.5),col});}
 }
 function spawnEnemy(type,boss,pw){
-  const g=G,p=g.ps?pickTarget():g.p,cf=g.ps?MN[nPl()]:1,m=g.t/60,tf=tfOf(m),hpm=boss?(pw?(1+14*.9)*pw*Math.pow(1.04,Math.min(m,60)-30>0?Math.min(m,60)-30:0):(1+g.bossN*1.1)*(m>4?Math.pow(1.09,Math.min(m,45)-4)*(m>45?Math.max(.5,1-(m-45)*.05):1):1)):(1+m*.35+m*m*.03)*tf,T=ET[type];
+  const g=G,p=g.ps?pickTarget():g.p,cf=g.ps?MN[nPl()]:1,m=g.t/60,tf=tfOf(m),hpm=boss?(pw?(1+14*.9)*pw*Math.pow(1.04,Math.min(m,60)-30>0?Math.min(m,60)-30:0):(1+g.bossN*1.1)*(m>4?Math.pow(1.09,Math.min(m,50)-4)*(m>50?Math.max(.5,1-(m-50)*.05):1):1)):(1+m*.35+m*m*.03)*tf,T=ET[type];
   const a=rnd(0,6.28),d=Math.hypot(W,H)/2+rnd(8,26);
   g.enemies.push({type,x:p.x+Math.cos(a)*d,y:p.y+Math.sin(a)*d,id:(g.eid=(g.eid||0)+1),hp:T.hp*hpm*cf,mhp:T.hp*hpm*cf,pw:pw||1,kx:0,ky:0,ph:rnd(0,6.28),spinCd:0,pop:0,dead:false});
 }
@@ -1941,7 +1943,7 @@ function update(dt){
   g.spT-=dt;
   if(g.spT<=0){
     g.spT=Math.max(.16,1-m*.07);
-    const n=Math.ceil((1+Math.floor(m/2)+Math.floor(Math.max(0,m-5)/2)+(g.enemies.length<30?1:0))*(g.ps?MN[nPl()]:1)*(m>45?Math.max(.6,1-(m-45)*.04):1));
+    const n=Math.ceil((1+Math.floor(m/2)+Math.floor(Math.max(0,m-5)/2)+(g.enemies.length<30?1:0))*(g.ps?MN[nPl()]:1)*(m>50?Math.max(.6,1-(m-50)*.04):1));
     for(let i=0;i<n;i++) if(g.enemies.length<(g.ps?Math.min(240,130*MN[nPl()]):130)) spawnEnemy(pickType(m));
   }
   const bi=biomeAt(g.t);
@@ -3010,7 +3012,7 @@ const NEWS=[['⚡','Megaevolución','Consigue la Piedra Megaevolutiva (jefe secr
 ['🎫','Gacha con tickets amarillos','Caen de los enemigos (0.5%) y jefes (5%). Tiradas ×1, ×10 y ×50. Te regalamos 10 para empezar.'],
 ['📜','Tier List y Lore','Nuevas secciones en el menú: la lista de mejores bichos y la historia de este mundo.'],
 ['🎵','Música y comodidad','Música nueva, pantalla completa, teclas 1/2/3 para elegir mejoras y menús más grandes en laptop.'],
-['⚖️','Balance','La dificultad se calma desde el minuto 45 y las calabazas dan menos.']];
+['⚖️','Balance','La dificultad se calma desde el minuto 50 y las calabazas dan menos.']];
 let newsShown=false;
 function maybeNews(){
   if(newsShown||SAVE.news===NEWS_V)return;newsShown=true;
@@ -3126,7 +3128,8 @@ $('grOk').addEventListener('click',()=>{$('gr').hidden=true;renderGacha();});
 // Para agregar uno: 'CODIGO':{c:monedas,t:tickets}. Van en MAYÚSCULAS y sin acentos.
 const CODES={
  'ISRAELVIP':{c:5000},
- 'TICKET2':{y:2}
+ 'TICKET2':{y:2},
+ 'MEGAPIEDRA':{y:5,s:1}
 };
 function redeem(){
   const raw=$('cdIn').value, k=raw.trim().toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,''), m=$('cdMsg');
@@ -3137,8 +3140,8 @@ function redeem(){
   const r=CODES[k];
   if(!r){say('Ese código no existe. Revisa que esté bien escrito.',false);return;}
   if(SAVE.codes[k]){say('Ya canjeaste este código en este dispositivo.',false);return;}
-  SAVE.codes[k]=1; SAVE.coins+=r.c||0; SAVE.yt=(SAVE.yt||0)+(r.y||0); SAVE.tickets=(SAVE.tickets||0)+(r.t||0); persist();
-  say('¡Listo! Ganaste '+[r.c?r.c+' ¢':'',r.y?r.y+' ticket'+(r.y>1?'s':'')+' amarillo'+(r.y>1?'s':''):'',r.t?r.t+' ticket'+(r.t>1?'s':'')+' especial'+(r.t>1?'es':''):''].filter(Boolean).join(' y ')+'.',true);
+  SAVE.codes[k]=1; SAVE.coins+=r.c||0; SAVE.yt=(SAVE.yt||0)+(r.y||0); SAVE.tickets=(SAVE.tickets||0)+(r.t||0); SAVE.stone=(SAVE.stone||0)+(r.s||0); persist();
+  say('¡Listo! Ganaste '+[r.c?r.c+' ¢':'',r.y?r.y+' ticket'+(r.y>1?'s':'')+' amarillo'+(r.y>1?'s':''):'',r.t?r.t+' ticket'+(r.t>1?'s':'')+' especial'+(r.t>1?'es':''):'',r.s?r.s+' megapiedra'+(r.s>1?'s':''):''].filter(Boolean).join(' y ')+'.',true);
   $('cdIn').value=''; coinPill($('cdWallet')); beep(900,.25,'triangle',.06,500);
 }
 function acHash(t){let h=7;for(let i=0;i<t.length;i++)h=(h*31+t.charCodeAt(i))>>>0;return h.toString(36).toUpperCase().padStart(6,'0').slice(-6);}
