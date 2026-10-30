@@ -1,5 +1,26 @@
-BICHOS SURVIVOR - pagina web
-Current UPD- Achivements, new 12 characters and coop 4 players UPD
-Halloween Update is oficially FINISHED, im only checking for bugs and the update is gonna be ready
-Next UPD: Halloween UPD(30-31/10/26) 
-Whats New for that Upd? - Megaevolutions, halloween event and lore improvements
+Changelog – Bichos Survivor
+v1.0 – Actualización de Halloween 🎃 (31 oct 2026)
+Nuevo
+Primesis: el Dios Bicho ahora es Primesis (sprite animado). Aparece en el minuto 30 y es el jefe final.
+Jefe final: la 3ª Megaevolución después del minuto 60 inicia el Juicio Final, con flashback, cinemática de caída, "determinación", barra de vida gigante, rayos de luz, bolas de energía y anillos de orbes.
+Final en coop: todos pelean contra Primesis. Cuando quedas solo, entra el LMS (cartel, música, curación y +40% de daño). Si ganan, salen el mensaje del creador y los créditos.
+Megaevolución para los 62+ bichos (botón MEGA o tecla M, 3 min por uso, 10 min en total, 15 min de recarga). Los bonos dependen de la tier: la tier D recibe más y la S menos.
+Megapiedras equipables: se compran en la tienda (400 🎃) y se equipan en Colección. Cada piedra queda permanente en el bicho. No se pueden poner dos al mismo bicho.
+Modo espectador en coop: si mueres sigues viendo a tus amigos y cambias de objetivo (tocando el letrero, Q/E o ← →).
+Música: 6 pistas (menú, partida, jefes de grieta, minuto 30+, LMS y créditos) con control de volumen en Ajustes y en Pausa.
+Tier List dentro del juego y como página aparte.
+Lore: pantalla con hoja antigua y pintura rupestre.
+Disfraces de Halloween para los enemigos.
+Pantalla de novedades al abrir el juego tras actualizar.
+Botones de pantalla completa y orientación.
+Sonidos al pulsar botones.
+Cambios
+Menú principal rediseñado y más compacto.
+Laptops: menús más grandes y subida de nivel con las teclas 1, 2 y 3.
+Gacha: ahora usa tickets amarillos (x1 = 1, x10 = 10, x50 = 50). Caen con 0.5% por enemigo y 5% por jefe. El banner especial del Juicio sigue usando tickets especiales.
+Calabazas nerfeadas (antes daban cerca de 1000 por hora).
+Dificultad: a partir del minuto 50 baja un poco el escalado, el spawn y la vida de los jefes.
+Coop: menos lag, con unos 46% menos de datos por jugador.
+Arreglos
+Coop: gemas y monedas ya no giran en hileras con el jugador, y el aro de los jefes ya se ve en los invitados.
+Cine del final ya no queda tapado por los botones de pantalla completa.
