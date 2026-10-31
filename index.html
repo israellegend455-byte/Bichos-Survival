@@ -473,12 +473,16 @@ button{font-family:inherit;color:inherit}
     <section><h3>Control de Xbox</h3><dl>
       <dt>Stick izq. / cruceta</dt><dd>Moverte en la partida y moverte por los menús.</dd>
       <dt>LB / RB</dt><dd>Ataque anterior / siguiente.</dd>
+      <dt>X</dt><dd>Megaevolución.</dd>
+      <dt>Y</dt><dd>Habilidad activa (Azarín y legendarios).</dd>
       <dt>A</dt><dd>Confirmar: elegir mejora, botones y menús.</dd>
       <dt>B</dt><dd>Volver o cerrar.</dd>
       <dt>Menú (☰)</dt><dd>Pausa, y continuar si ya estás en pausa.</dd></dl></section>
     <section><h3>Control de PlayStation</h3><dl>
       <dt>Stick izq. / cruceta</dt><dd>Moverte en la partida y moverte por los menús.</dd>
       <dt>L1 / R1</dt><dd>Ataque anterior / siguiente.</dd>
+      <dt>□ (cuadrado)</dt><dd>Megaevolución.</dd>
+      <dt>△ (triángulo)</dt><dd>Habilidad activa (Azarín y legendarios).</dd>
       <dt>✕ (equis)</dt><dd>Confirmar: elegir mejora, botones y menús.</dd>
       <dt>○ (círculo)</dt><dd>Volver o cerrar.</dd>
       <dt>Options</dt><dd>Pausa, y continuar si ya estás en pausa.</dd></dl></section>
@@ -3372,6 +3376,8 @@ function padPoll2(dt){
     padV.x=mx;padV.y=my;
     const d=pr(5)?1:pr(4)?-1:0;
     if(d){const it=abItems(),n=it.length;if(n){let i=it.findIndex(isActiveItem);if(i<0)i=0;selectItem((i+d+n)%n);}}
+    if(pr(2))$('mgBtn').click();
+    if(pr(3))$('rlBtn').click();
     if(pr(9)||pr(8))pauseGame();
   }else if(ov){
     const dirs={l:b(14)||ax<-.6,r:b(15)||ax>.6,u:b(12)||ay<-.6,d:b(13)||ay>.6},V={l:[-1,0],r:[1,0],u:[0,-1],d:[0,1]};
