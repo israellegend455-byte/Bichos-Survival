@@ -17,21 +17,31 @@ Características Principales
 
 • Coleccionismo y Desafío: Cuenta con más de 67 bichos únicos divididos en una tabla de clasificación (Tier List) competitiva, variantes Shiny (Brillantes) ultra raras y un Ranking global en tiempo real para registrar los mejores tiempos de supervivencia.
 
-🎃 Bichos Survivor – Actualización de Halloween
+🔥 ACTUALIZACIÓN: LA TORRE Y LOS ULTRAS 🔥
 
-La actualización más grande hasta ahora, con un secreto escondido al final de la partida.
+🏺 Temporada 2 – La Antigüedad
+• Nuevo ticket 🏺 para los gachas de la Temporada 2 (los tickets amarillos ya solo sirven en la Temporada 1)
+• Nuevos códigos de la comunidad
+• Muchos logros nuevos
 
-Lo más destacado
-👁️ Jefe final secreto: algo despierta pasado el minuto 30. Hay un Juicio Final para quien llegue al fondo, también en coop.
+🗼 La Torre
+• Música nueva para la Torre y para sus jefes
+• Hay cosas ocultas por ahí... abre bien los ojos 👀
 
-⚡ Megaevolución para todos los bichos con megapiedras equipables.
+🌟 Ultras
+• Los Ultras ahora tienen 3 habilidades activas y 1 pasiva
+• Balance: ajustamos a los Ultras para que sigan siendo muy fuertes, pero sin romper el juego
+• Nueva cinemática con música épica
 
-🎰 Azarín, un bicho épico apostador con ruleta de buffs y JACKPOT.
+⚔️ Juego
+• Modo difícil para las partidas normales: enemigos más duros, pero más monedas
+• Tier List dentro del juego (general y por temporada)
+• Las partidas ahora son más difíciles
 
-✨ Habilidades activas para los 12 legendarios (tecla R).
+🔥 EVENTO: ADMIN ABUSE 🔥
+• Recompensas ×2 por 24 horas (monedas y drops)
+• Aprovéchalo y farmea todo lo que puedas
 
-👻 Enemigos disfrazados, música nueva, modo espectador, Lore y Tier List.
-
-El detalle completo está en el changelog.
+¡Gracias por jugar! Cuéntenme qué tal les va y si encuentran algún error 🙌
 
 🎮 Juega aquí: https://bichos-survivor.onrender.com/
