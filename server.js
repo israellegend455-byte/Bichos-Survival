@@ -5,10 +5,34 @@ const http=require('http'),fs=require('fs'),path=require('path');
 const PORT=process.env.PORT||3000;
 const FILE=process.env.DATA_FILE||path.join(__dirname,'ranking.json');
 let DB={};try{DB=JSON.parse(fs.readFileSync(FILE,'utf8'));}catch(e){}
+const FILET=process.env.DATA_FILE_T||path.join(__dirname,'torre.json');
+let TDB={};try{TDB=JSON.parse(fs.readFileSync(FILET,'utf8'));}catch(e){}
+let dirtyT=false;
+setInterval(()=>{if(!dirtyT)return;dirtyT=false;try{fs.writeFileSync(FILET,JSON.stringify(TDB));}catch(e){console.error('no pude guardar torre',e.message);}},5000);
+const topT=n=>Object.entries(TDB).map(([id,r])=>Object.assign({id},r)).sort((a,b)=>b.f-a.f||(b.hd?1:0)-(a.hd?1:0)||a.tm-b.tm).slice(0,n);
 let dirty=false;
 setInterval(()=>{if(!dirty)return;dirty=false;try{fs.writeFileSync(FILE,JSON.stringify(DB));}catch(e){console.error('no pude guardar',e.message);}},5000);
+const FILEU=process.env.DATA_FILE_U||path.join(__dirname,'ultras.json');
+let UDB={pulls:{},wins:[]};try{UDB=Object.assign(UDB,JSON.parse(fs.readFileSync(FILEU,'utf8')));}catch(e){}
+let dirtyU=false;
+setInterval(()=>{if(!dirtyU)return;dirtyU=false;try{fs.writeFileSync(FILEU,JSON.stringify(UDB));}catch(e){console.error('no pude guardar ultras',e.message);}},5000);
+const FILEE=process.env.DATA_FILE_E||path.join(__dirname,'evento.json');
+let EVT={m:2,end:0};try{EVT=Object.assign(EVT,JSON.parse(fs.readFileSync(FILEE,'utf8')));}catch(e){}
+const saveEv=()=>{try{fs.writeFileSync(FILEE,JSON.stringify(EVT));}catch(e){}};
+const UNAME={u1:'Primesis',u2:'Primeris'};
+function ultStats(){
+  const out={};
+  for(const u of ['u1','u2']){
+    const P=UDB.pulls[u]||{y:0,g:0,pl:{}},W=UDB.wins.filter(w=>w.u===u),ids=new Set(W.map(w=>w.id)),sn=W.map(w=>w.since);
+    out[u]={name:UNAME[u],players:Object.keys(P.pl||{}).length,y:P.y||0,g:P.g||0,total:(P.y||0)+(P.g||0),hits:W.length,winners:ids.size,
+      byY:W.filter(w=>w.tk==='y').length,byG:W.filter(w=>w.tk==='g').length,
+      avg:sn.length?Math.round(sn.reduce((a,b)=>a+b,0)/sn.length):0,min:sn.length?Math.min(...sn):0,max:sn.length?Math.max(...sn):0,
+      latest:W.slice(-15).reverse().map(w=>({name:w.name,tk:w.tk,since:w.since,sh:w.sh,ts:w.ts}))};
+  }
+  return out;
+}
 const hits={};
-const CORS={'Access-Control-Allow-Origin':'*','Access-Control-Allow-Methods':'GET,POST,OPTIONS','Access-Control-Allow-Headers':'Content-Type'};
+const CORS={'Access-Control-Allow-Origin':'*','Access-Control-Allow-Methods':'GET,POST,OPTIONS','Access-Control-Allow-Headers':'Content-Type,X-Owner'};
 const send=(res,code,obj)=>{res.writeHead(code,Object.assign({'Content-Type':'application/json'},CORS));res.end(JSON.stringify(obj));};
 const top=n=>Object.entries(DB).map(([id,r])=>Object.assign({id},r)).sort((a,b)=>b.t-a.t||a.ts-b.ts).slice(0,n);
 const server=http.createServer((req,res)=>{
@@ -32,8 +56,55 @@ const server=http.createServer((req,res)=>{
     });
     return;
   }
+  if(req.method==='GET'&&u.pathname==='/torre'){
+    const id=u.searchParams.get('id');const rows=topT(30).map(r=>({name:r.name,f:r.f,hd:r.hd,tm:r.tm,kind:r.kind,sh:r.sh,id:r.id.slice(0,6)}));
+    return send(res,200,{rows,mine:id&&TDB[id]?TDB[id]:null});
+  }
+  if(req.method==='POST'&&u.pathname==='/torre'){
+    const ip=req.headers['x-forwarded-for']||req.socket.remoteAddress,now=Date.now();
+    if(hits['t'+ip]&&now-hits['t'+ip]<1500)return send(res,429,{error:'muy rápido'});hits['t'+ip]=now;
+    let b='';req.on('data',c=>{b+=c;if(b.length>2000)req.destroy();});
+    req.on('end',()=>{
+      let d;try{d=JSON.parse(b);}catch(e){return send(res,400,{error:'json'});}
+      const id=String(d.id||'').slice(0,40),name=String(d.name||'').trim().replace(/\s+/g,' ').slice(0,14),f=Math.floor(+d.f),tm=Math.floor(+d.tm),hd=d.hd?1:0;
+      if(id.length<8||!name||!(f>=1&&f<=20)||!(tm>=1&&tm<=36000))return send(res,400,{error:'datos'});
+      const old=TDB[id],kind=String(d.kind||'').slice(0,20).replace(/[^a-z0-9_]/gi,'');
+      const better=!old||f>old.f||(f===old.f&&(hd>(old.hd?1:0)||(hd===(old.hd?1:0)&&tm<old.tm)));
+      if(better)TDB[id]={name,f,tm,hd,kind,sh:!!d.sh,ts:now};else if(old.name!==name)old.name=name;
+      dirtyT=true;send(res,200,{ok:true,mine:TDB[id]});
+    });
+    return;
+  }
+  if(req.method==='POST'&&u.pathname==='/ultra'){
+    let b='';req.on('data',c=>{b+=c;if(b.length>2000)req.destroy();});
+    req.on('end',()=>{
+      let d;try{d=JSON.parse(b);}catch(e){return send(res,400,{error:'json'});}
+      const id=String(d.id||'').slice(0,40),name=String(d.name||'Anónimo').trim().replace(/\s+/g,' ').slice(0,14)||'Anónimo',uu=d.u,tk=d.tk,n=Math.floor(+d.n);
+      if(id.length<8||!(uu==='u1'||uu==='u2')||!(tk==='y'||tk==='g')||!(n>=1&&n<=50))return send(res,400,{error:'datos'});
+      const P=UDB.pulls[uu]=UDB.pulls[uu]||{y:0,g:0,pl:{}};P[tk]+=n;P.pl[id]=(P.pl[id]||0)+n;
+      if(d.hit){const since=Math.floor(+d.hit.since);if(since>=1&&since<=1e7){UDB.wins.push({id,name,u:uu,tk,since,sh:!!d.hit.sh,ts:Date.now()});if(UDB.wins.length>5000)UDB.wins.shift();}}
+      dirtyU=true;send(res,200,{ok:true});
+    });
+    return;
+  }
+  if(u.pathname==='/evento'){
+    if(req.method==='GET')return send(res,200,{m:EVT.m,end:EVT.end>Date.now()?EVT.end:0,now:Date.now()});
+    if(req.method==='POST'){
+      if(!isOwner(req.headers['x-owner']))return send(res,403,{error:'no'});
+      let b='';req.on('data',c=>{b+=c;if(b.length>500)req.destroy();});
+      req.on('end',()=>{let d={};try{d=JSON.parse(b);}catch(e){}
+        const h=Math.max(0,Math.min(168,+d.h||0)),m=Math.max(1,Math.min(5,+d.m||2));
+        EVT={m,end:h?Date.now()+h*36e5:0};saveEv();send(res,200,{ok:1,m:EVT.m,end:EVT.end,now:Date.now()});});
+      return;
+    }
+  }
+  if(req.method==='GET'&&u.pathname==='/ultras'){
+    if(!isOwner(req.headers['x-owner']))return send(res,403,{error:'no'});
+    if(u.searchParams.get('dl')){res.writeHead(200,Object.assign({'Content-Type':'application/json','Content-Disposition':'attachment; filename="ultras-respaldo.json"'},CORS));return res.end(JSON.stringify(UDB));}
+    return send(res,200,{ok:1,banners:ultStats()});
+  }
   if(u.pathname==='/salud')return send(res,200,{ok:true,jugadores:Object.keys(DB).length,salas:Object.keys(rooms).length});
-  if(req.method==='GET'&&/^\/audio\/(menu|play|rift|stand|lms|creator)\.mp3$/.test(u.pathname)){
+  if(req.method==='GET'&&/^\/audio\/(menu|play|rift|stand|lms|creator|torre|tboss|hcboss|ultra1|ultra2)\.mp3$/.test(u.pathname)){
     try{const fp=path.join(__dirname,u.pathname),st=fs.statSync(fp),r=req.headers.range,h={'Content-Type':'audio/mpeg','Accept-Ranges':'bytes','Cache-Control':'public, max-age=86400'};
       if(r){const m=/bytes=(\d*)-(\d*)/.exec(r),s0=m[1]?+m[1]:0,e0=m[2]?+m[2]:st.size-1;res.writeHead(206,Object.assign(h,{'Content-Range':'bytes '+s0+'-'+e0+'/'+st.size,'Content-Length':e0-s0+1}));return fs.createReadStream(fp,{start:s0,end:e0}).pipe(res);}
       res.writeHead(200,Object.assign(h,{'Content-Length':st.size}));return fs.createReadStream(fp).pipe(res);}catch(e){return send(res,404,{error:'no audio'});}
