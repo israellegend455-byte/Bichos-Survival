@@ -33,14 +33,24 @@ Características Principales
 • Balance: ajustamos a los Ultras para que sigan siendo muy fuertes, pero sin romper el juego
 • Nueva cinemática con música épica
 
-⚔️ Juego
-• Modo difícil para las partidas normales: enemigos más duros, pero más monedas
-• Tier List dentro del juego (general y por temporada)
-• Las partidas ahora son más difíciles
+🔥 ACTUALIZACIÓN: LEYENDAS, ULTRAS Y LA TORRE 🔥
+
+🐾 10 bichos nuevos – Leyendas Olvidadas (Temporada 2)
+• Cronosaurio y Titán Dormido (legendarios), Ambrosa, Osamenta, Cenicero, Roble, Escarcha, Glifón, Sombra del Alba y Reliquia
+• Cada uno con su ataque exclusivo, 3 etapas y versión brillante
+• Banner nuevo: Leyendas Olvidadas
+
+🧩 6 MTs nuevos
+• MT17 a MT22, inspirados en la Antigüedad
+• Los compras en la tienda con monedas
+
+✨ Skins para los Ultras
+• 4 skins nuevas: 2 para cada Ultra, y con la versión brillante se ven todavía mejor
+• Nueva pestaña en la tienda (solo para quien tenga un Ultra)
+
 
 🔥 EVENTO: ADMIN ABUSE 🔥
 • Recompensas ×2 por 24 horas (monedas y drops)
-• Aprovéchalo y farmea todo lo que puedas
 
 ¡Gracias por jugar! Cuéntenme qué tal les va y si encuentran algún error 🙌
 
