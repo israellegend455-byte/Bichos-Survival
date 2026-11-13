@@ -16,6 +16,10 @@ const FILEU=process.env.DATA_FILE_U||path.join(__dirname,'ultras.json');
 let UDB={pulls:{},wins:[]};try{UDB=Object.assign(UDB,JSON.parse(fs.readFileSync(FILEU,'utf8')));}catch(e){}
 let dirtyU=false;
 setInterval(()=>{if(!dirtyU)return;dirtyU=false;try{fs.writeFileSync(FILEU,JSON.stringify(UDB));}catch(e){console.error('no pude guardar ultras',e.message);}},5000);
+const FILEG=process.env.DATA_FILE_G||path.join(__dirname,'tags.json');
+let TG={};try{TG=JSON.parse(fs.readFileSync(FILEG,'utf8'))||{};}catch(e){}
+const saveTg=()=>{try{fs.writeFileSync(FILEG,JSON.stringify(TG));}catch(e){}};
+const TAGOK=['owner','fundador','veterano','antiguo','leyenda','torre'];
 const FILEE=process.env.DATA_FILE_E||path.join(__dirname,'evento.json');
 let EVT={m:2,end:0};try{EVT=Object.assign(EVT,JSON.parse(fs.readFileSync(FILEE,'utf8')));}catch(e){}
 const saveEv=()=>{try{fs.writeFileSync(FILEE,JSON.stringify(EVT));}catch(e){}};
@@ -39,7 +43,7 @@ const server=http.createServer((req,res)=>{
   if(req.method==='OPTIONS'){res.writeHead(204,CORS);return res.end();}
   const u=new URL(req.url,'http://x');
   if(req.method==='GET'&&u.pathname==='/rank'){
-    const id=u.searchParams.get('id'); const rows=top(Math.min(50,+u.searchParams.get('limit')||30)).map(r=>({name:r.name,t:r.t,k:r.k,kind:r.kind,sh:r.sh,id:r.id.slice(0,6)}));
+    const id=u.searchParams.get('id'); const rows=top(Math.min(50,+u.searchParams.get('limit')||30)).map(r=>({name:r.name,t:r.t,k:r.k,kind:r.kind,sh:r.sh,id:r.id.slice(0,6),tag:TG[r.id]||''}));
     return send(res,200,{rows,mine:id&&DB[id]?DB[id]:null});
   }
   if(req.method==='POST'&&u.pathname==='/rank'){
@@ -57,7 +61,7 @@ const server=http.createServer((req,res)=>{
     return;
   }
   if(req.method==='GET'&&u.pathname==='/torre'){
-    const id=u.searchParams.get('id');const rows=topT(30).map(r=>({name:r.name,f:r.f,hd:r.hd,tm:r.tm,kind:r.kind,sh:r.sh,id:r.id.slice(0,6)}));
+    const id=u.searchParams.get('id');const rows=topT(30).map(r=>({name:r.name,f:r.f,hd:r.hd,tm:r.tm,kind:r.kind,sh:r.sh,id:r.id.slice(0,6),tag:TG[r.id]||''}));
     return send(res,200,{rows,mine:id&&TDB[id]?TDB[id]:null});
   }
   if(req.method==='POST'&&u.pathname==='/torre'){
@@ -85,6 +89,17 @@ const server=http.createServer((req,res)=>{
       if(d.hit){const since=Math.floor(+d.hit.since);if(since>=1&&since<=1e7){UDB.wins.push({id,name,u:uu,tk,since,sh:!!d.hit.sh,ts:Date.now()});if(UDB.wins.length>5000)UDB.wins.shift();}}
       dirtyU=true;send(res,200,{ok:true});
     });
+    return;
+  }
+  if(req.method==='POST'&&u.pathname==='/tag'){
+    let b='';req.on('data',c=>{b+=c;if(b.length>500)req.destroy();});
+    req.on('end',()=>{let d={};try{d=JSON.parse(b);}catch(e){}
+      const id=String(d.id||'').slice(0,40),tag=String(d.tag||'');
+      if(id.length<8)return send(res,400,{error:'id'});
+      if(tag&&!TAGOK.includes(tag))return send(res,400,{error:'tag'});
+      if(tag==='owner'&&!isOwner(req.headers['x-owner']))return send(res,403,{error:'no'});
+      if(TG[id]==='owner'&&tag!=='owner'&&!isOwner(req.headers['x-owner']))return send(res,200,{ok:1,tag:TG[id]});
+      if(tag)TG[id]=tag;else delete TG[id];saveTg();send(res,200,{ok:1,tag});});
     return;
   }
   if(u.pathname==='/evento'){
