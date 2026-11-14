@@ -266,6 +266,8 @@ button{font-family:inherit;color:inherit}
 .shtab.on{background:var(--acc);color:#241200}
 #mgBtn{position:fixed;left:12px;bottom:calc(104px + env(safe-area-inset-bottom,0px));z-index:7;font-family:var(--f-display);font-size:11px;padding:12px 10px;border-radius:12px;border:2px solid #fff8;color:#fff;background:linear-gradient(#7a3ae8,#e83a8a);box-shadow:0 0 14px #b58cff}
 #rlBtn{position:fixed;left:12px;bottom:calc(160px + env(safe-area-inset-bottom,0px));z-index:7;font-family:var(--f-display);font-size:11px;padding:12px 10px;border-radius:12px;border:2px solid #fff8;color:#fff;background:linear-gradient(#0f9b6a,#34d399);cursor:pointer}
+#qBtn{position:fixed;left:12px;bottom:calc(214px + env(safe-area-inset-bottom,0px));z-index:7;font-family:var(--f-display);font-size:11px;padding:12px 10px;border-radius:12px;border:2px solid #fff8;color:#fff;background:linear-gradient(#4a1f9a,#a45cff);cursor:pointer}
+#qBtn.cd{filter:grayscale(.8) brightness(.7)}
 #rlBtn.on{background:linear-gradient(#ffd24a,#ff7a1a);color:#2a1000}#rlBtn.cd{filter:grayscale(.8) brightness(.7)}
 #mgBtn.rdy{animation:mgp 1s ease-in-out infinite}#mgBtn.on{background:linear-gradient(#ffd24a,#ff7a1a);color:#2a1000}#mgBtn.cd{filter:grayscale(.8) brightness(.7)}
 @keyframes mgp{50%{transform:scale(1.1);box-shadow:0 0 26px #ff9aff}}
@@ -346,6 +348,7 @@ button{font-family:inherit;color:inherit}
 <div id="banner" hidden></div>
 <button id="mgBtn" hidden>MEGA</button>
 <button id="rlBtn" hidden>RULETA</button>
+<button id="qBtn" hidden>Q</button>
 <div id="juicio" hidden></div>
 <div id="cine" hidden></div>
 <div id="ucine" hidden><canvas id="ucv"></canvas><button id="ucSkip">Saltar ⏭</button></div>
@@ -387,6 +390,7 @@ button{font-family:inherit;color:inherit}
         <button class="mb" id="mTw"></button>
         <button class="mb" id="mTier"></button>
         <button class="mb" id="mLore"></button>
+        <button class="mb" id="mTg"></button>
       </div>
     </nav>
   </div>
@@ -405,6 +409,10 @@ button{font-family:inherit;color:inherit}
 <div class="ov wide" id="lg" hidden>
   <div class="scr-head"><h2>Logros</h2><div class="pill2" id="lgCount"></div><button class="mini" id="lgBack">Volver</button></div>
   <div id="lgList"></div>
+</div>
+<div class="ov wide" id="tg" hidden>
+  <div class="scr-head"><h2>Etiquetas</h2><div class="pill2" id="tgCount"></div><button class="mini" id="tgBack">Volver</button></div>
+  <div id="tgList"></div>
 </div>
 <div class="ov wide" id="tl" hidden>
   <div class="scr-head"><h2>Tier List</h2><button class="mini" id="tlBack">Volver</button></div>
@@ -1011,7 +1019,7 @@ ATK.x_huesin={id:'x_huesin',type:'Fantasma',name:'Lluvia de Huesos',evo:'Osament
 ATK.x_momin={id:'x_momin',type:'Tierra',name:'Vendas Aprisionadoras',evo:'Maldición del Faraón',a:'orbit',c1:'#e8d8a8',c2:'#ff5a3a',p:Object.assign({},AD.orbit,{"n": 3, "r": 30, "dmg": 9, "spd": 3}),ex:1};
 ATK.x_azarin={id:'x_azarin',type:'Místico',name:'Dados Locos',evo:'Lluvia de Dados',a:'boomerang',c1:'#f4ecd8',c2:'#d82a3a',p:Object.assign({},AD.boomerang,{"n":2,"spd":100,"dmg":15,"cd":1.4}),ex:1};
 KIND.primesis={name:["Primesis", "Primesis", "Primesis"],type:'Cósmico',inv:1,exs:['x_primesis2','x_primesis3'],pas:'time',tcol:'#ffe27a',rar:4,ult:1,feat:'horn',ex:'x_primesis',bonus:'+40% de daño, +120 PS máximos, +12% de velocidad y +15% de experiencia. Empieza con 3 habilidades: Juicio Final, Instante Eterno (congela) y Relámpago Primero. Pasiva Reloj Eterno: cada 25 s bloquea un golpe y congela a los rivales cercanos.',body:'#aeb356',body2:'#eff777',body3:'#8c912d',belly:'#ffffff',acc:'#4682fa',ap:st=>{st.dmg+=.4;st.hpb+=120;st.spd+=.12;st.xp+=.15}};
-KIND.primeris={name:["Hollowcrew", "Hollowcrew", "Hollowcrew"],type:'Sombra',exs:['x_primeris2','x_primeris3'],exu:['x_primeris4'],pas:'bless',tcol:'#a45cff',rar:4,ult:1,feat:'horn',ex:'x_primeris',bonus:'+30% de daño, +100 PS máximos, +0.8 PS por segundo y +20% de experiencia. Empieza con Orbes del Vacío, Rayo Dimensional y Dominio Absoluto; Teletransporte aparece al subir de nivel. Pasiva Yo Permanecí: cada rival derrotado te cura y empiezas con 1 segunda oportunidad.',body:'#2a1450',body2:'#7a45d6',body3:'#bfa6e6',belly:'#f4ecff',acc:'#d070ff',ap:st=>{st.dmg+=.3;st.hpb+=100;st.regen+=.8;st.xp+=.2}};
+KIND.primeris={name:["Hollowcrew", "Hollowcrew", "Hollowcrew"],type:'Sombra',exs:[],exu:['x_primeris4'],pas:'bless',tcol:'#a45cff',rar:4,ult:1,feat:'horn',ex:'x_primeris',bonus:'+30% de daño, +100 PS máximos, +0.8 PS por segundo y +20% de experiencia. Empieza con Esfera Oscura y dos habilidades activas: Rayo Dimensional (R) y Dominio Absoluto (Q); Teletransporte aparece al subir de nivel. Pasiva Yo Permanecí: cada rival derrotado te cura y empiezas con 1 segunda oportunidad.',body:'#2a1450',body2:'#7a45d6',body3:'#bfa6e6',belly:'#f4ecff',acc:'#d070ff',ap:st=>{st.dmg+=.3;st.hpb+=100;st.regen+=.8;st.xp+=.2}};
 KIND.cronosaurio={name:["Relojito", "Cronosaurio", "Señor del Tiempo"],type:'Fósil',tcol:'#b8a888',rar:3,feat:'horn',ex:'x_cronosaurio',s2:1,bonus:'+20% de daño, +80 PS máximos y +10% de velocidad.',body:'#6a9a50',body2:'#a8d078',body3:'#3a6030',belly:'#e8e0b0',acc:'#ffb02a',ap:st=>{st.dmg+=.2;st.hpb+=80;st.spd+=.1}};
 KIND.ambrosa={name:["Ambrosa", "Ambrosía Viva", "Reina Ambrosía"],type:'Ámbar',tcol:'#ffb02a',rar:2,feat:'horn',ex:'x_ambrosa',s2:1,bonus:'+14% de experiencia y +10% de velocidad.',body:'#ffb02a',body2:'#ffe08a',body3:'#c8741a',belly:'#fff3c8',acc:'#6a4a1a',ap:st=>{st.xp+=.14;st.spd+=.1}};
 KIND.osamenta={name:["Costilla", "Osamenta", "Rey Costillar"],type:'Hueso',tcol:'#efe4c8',rar:2,feat:'horn',ex:'x_osamenta',s2:1,bonus:'+12% de daño y +60 PS máximos.',body:'#d8ccb0',body2:'#f8f0d8',body3:'#988c70',belly:'#fffdf0',acc:'#ffd24a',ap:st=>{st.dmg+=.12;st.hpb+=60}};
@@ -1048,7 +1056,7 @@ ATK.x_primesis3={id:'x_primesis3',type:'Cósmico',name:'Relámpago Primero',evo:
 ATK.x_primeris2={id:'x_primeris2',type:'Sombra',name:'Rayo Dimensional',evo:'Fisura Dimensional',a:'strike',c1:'#b066ff',c2:'#ffffff',p:Object.assign({},AD.strike,{n:2,dmg:24,r:17,cd:1.5,style:'bolt'}),ex:1};
 ATK.x_primeris3={id:'x_primeris3',type:'Sombra',name:'Dominio Absoluto',evo:'Dominio Eterno',a:'trail',c1:'#7a45d6',c2:'#d9b8ff',p:Object.assign({},AD.trail,{r:22,life:5,dmg:6,cd:.5}),ex:1};
 ATK.x_primeris4={id:'x_primeris4',type:'Sombra',name:'Teletransporte',evo:'Salto Dimensional',a:'blink',c1:'#b066ff',c2:'#ffffff',p:{cd:5,dmg:16,r:34},ex:1};
-ATK.x_primeris={id:'x_primeris',type:'Sombra',name:'Orbes del Vacío',evo:'Corona del Vacío',a:'orbit',c1:'#b066ff',c2:'#ffffff',p:Object.assign({},AD.orbit,{n:5,r:46,dmg:12,spd:3.4}),ex:1};
+ATK.x_primeris={id:'x_primeris',type:'Sombra',name:'Esfera Oscura',evo:'Singularidad Oscura',a:'shot',c1:'#14081f',c2:'#b066ff',p:Object.assign({},AD.shot,{n:1,dmg:30,cd:.75,spd:100,life:2.2,pierce:5,r:6,home:1,bh:1,dk:1}),ex:1};
 ATK.x_cronosaurio={id:'x_cronosaurio',type:'Fósil',name:'Arena del Tiempo',evo:'Reloj Detenido',a:'nova',c1:'#e8c860',c2:'#ffffff',p:Object.assign({},AD.nova,{"r": 50, "cd": 3, "dmg": 14, "fz": 1.2}),ex:1};
 ATK.x_ambrosa={id:'x_ambrosa',type:'Ámbar',name:'Polen Dorado',evo:'Nube de Polen',a:'shot',c1:'#ffb02a',c2:'#fff3c8',p:Object.assign({},AD.shot,{"home": 1, "n": 3, "spd": 80, "life": 2, "dmg": 9, "r": 4, "cd": 1.1}),ex:1};
 ATK.x_osamenta={id:'x_osamenta',type:'Hueso',name:'Jaula de Costillas',evo:'Corona de Colmillos',a:'orbit',c1:'#efe4c8',c2:'#b8a888',p:Object.assign({},AD.orbit,{"n": 5, "r": 34, "dmg": 9, "spd": 2.6}),ex:1};
@@ -2054,6 +2062,7 @@ function netMsg(m){
     case 'sel':if(g&&g.ps){asGuest(()=>{const it=abItems()[m.n|0];if(it)G.act=it.k==='l'?{k:'l',i:it.i}:{k:'a',id:it.id};},m.f|0);}break;
     case 'mega':if(g&&g.ps)asGuest(megaTry,m.f|0);break;
     case 'rl':if(g&&g.ps)asGuest(rlTry,m.f|0);break;
+    case 'ql':if(g&&g.ps)asGuest(qlTry,m.f|0);break;
     case 'rlr':if(g&&g.guest&&m.to===NET.idx)rlShow(String(m.n||'').slice(0,20),m.k|0);break;
     case 'pick':if(g&&g.ps)guestPick(m.f|0,m.i|0);break;
     case 'amr':if(g&&g.ps){const f=m.f|0;asGuest(()=>{if(G.amQ.length)amResolve(!!m.swap);},f);if(g.ps[f])g.ps[f].amBusy=false;}break;
@@ -2120,14 +2129,14 @@ function killEnemy(e){
   g.gems.push({x:e.x,y:e.y,k:'xp',v:e.type==='boss'?T.xp:T.xp});
   if(Math.random()<.22||e.type==='roca') g.gems.push({x:e.x+rnd(-4,4),y:e.y+rnd(-4,4),k:'coin',v:ri(1,3)});
   if(Math.random()<.004||e.type==='boss'){for(let i=0;i<1;i++)g.gems.push({x:e.x+rnd(-6,6),y:e.y+rnd(-6,6),k:'pump',v:1});}
-  if(Math.random()<(e.type==='boss'?.03:.003)*X3())g.gems.push({x:e.x+rnd(-5,5),y:e.y+rnd(-5,5),k:'yt',v:1});
-  if(S2_ON&&Math.random()<(e.type==='boss'?.03:.003)*X3())g.gems.push({x:e.x+rnd(-5,5),y:e.y+rnd(-5,5),k:'t2',v:1});
+  if(Math.random()<(e.type==='boss'?.02:.002)*X3())g.gems.push({x:e.x+rnd(-5,5),y:e.y+rnd(-5,5),k:'yt',v:1});
+  if(S2_ON&&Math.random()<(e.type==='boss'?.02:.002)*X3())g.gems.push({x:e.x+rnd(-5,5),y:e.y+rnd(-5,5),k:'t2',v:1});
   if((SAVE.gt5||e.type==='boss')&&Math.random()<(SAVE.gt5?.05:.015*X3()))g.gems.push({x:e.x+rnd(-5,5),y:e.y+rnd(-5,5),k:'gt',v:1});
   const r=Math.random();
   if(r<.012) g.gems.push({x:e.x,y:e.y,k:'heal',v:0});
   else if(r<.018) g.gems.push({x:e.x,y:e.y,k:'mag',v:0});
   if(e.type==='boss')g.bossK=(g.bossK||0)+1;
-  if(e.type==='boss'){g.gems.push({x:e.x,y:e.y,k:'chest',v:0});if(Math.random()<.1*X3())g.gems.push({x:e.x+7,y:e.y+3,k:'ticket',v:0});if(Math.random()<Math.min(1,.45*X3()))g.gems.push({x:e.x-7,y:e.y+3,k:'amulet',v:rollAmulet()});if(!e.vb&&!g.auto)g.linkTok++;banner(e.vb||g.auto?'¡Jefe derrotado!':'¡Jefe derrotado! +1 enlace',1800);beep(520,.35,'triangle',.06,300);}
+  if(e.type==='boss'){g.gems.push({x:e.x,y:e.y,k:'chest',v:0});if(Math.random()<.1*X3())g.gems.push({x:e.x+7,y:e.y+3,k:'ticket',v:0});if(Math.random()<Math.min(1,.45*X3()))g.gems.push({x:e.x-7,y:e.y+3,k:'amulet',v:rollAmulet()});const lk=g.tw&&!e.vb&&!g.auto;if(lk)g.linkTok++;banner(lk?'¡Jefe derrotado! +1 enlace':'¡Jefe derrotado!',1800);beep(520,.35,'triangle',.06,300);}
   burst(e.x,e.y-4,e.type==='boss'?24:6,e.type==='boss'?'#c58bff':'#e8f6e8');
 }
 function burst(x,y,n,col){
@@ -2179,7 +2188,7 @@ function castAtk(id){
   let ok=false;
   if(a==='shot'){
     const tg=nearest(S.n,170);
-    if(tg.length){ok=true;for(let i=0;i<S.n;i++){const e=tg[i%tg.length];let an=Math.atan2(e.y-p.y,e.x-p.x);if(i>=tg.length)an+=(i%2?1:-1)*.18*Math.ceil((i-tg.length+1)/2);addShot(an,S,A);}beep(620,.05,'square',.015,-200);}
+    if(tg.length){ok=true;for(let i=0;i<S.n;i++){const e=tg[i%tg.length];let an=Math.atan2(e.y-p.y,e.x-p.x);if(i>=tg.length)an+=(i%2?1:-1)*.18*Math.ceil((i-tg.length+1)/2);addShot(an,S,A,S.dk?{bh:1,dk:1}:null);}beep(S.dk?160:620,.05,S.dk?'sawtooth':'square',.015,-200);}
   }else if(a==='cone'){
     const tg=nearest(1,150);
     if(tg.length){ok=true;const base=Math.atan2(tg[0].y-p.y,tg[0].x-p.x),arc=S.spread*Math.min(1,.35+S.n*.1),step=S.n>1?arc*2/(S.n-1):0;
@@ -2648,6 +2657,7 @@ function draw(){
   for(const s of g.shots){
     const x=Math.round(s.x),y=Math.round(s.y),r=Math.max(2,Math.round(s.r));
     if(s.boom){ctx.save();ctx.translate(x,y);ctx.rotate(t*18);R(ctx,-r-1,-1,r*2+2,2,s.c1);R(ctx,-1,-r-1,2,r*2+2,s.c2);ctx.restore();}
+    else if(s.dk){ctx.globalAlpha=.4;ctx.fillStyle=s.c2;ctx.beginPath();ctx.arc(x,y,r+3,0,6.283);ctx.fill();ctx.globalAlpha=1;ctx.fillStyle=s.c1;ctx.beginPath();ctx.arc(x,y,r,0,6.283);ctx.fill();ctx.fillStyle=s.c2;ctx.fillRect(x-1,y-1,2,2);}
     else{R(ctx,x-r,y-r,r*2,r*2,s.c1);R(ctx,x-r+1,y-r+1,r*2-2,r*2-2,s.c2);R(ctx,x-1,y-1,2,2,'#fff');}
   }
   for(const sk of g.strikes){const f=Math.max(0,sk.t/sk.tot),x=Math.round(sk.x),y=Math.round(sk.y);
@@ -2897,7 +2907,7 @@ function startRun(kind,co){
   if(G&&!co&&SAVE.hm)G.hm=1;
   banner(G&&G.hm?'¡Sobrevive! 🔥 Modo difícil':'¡Sobrevive!',1600); beep(520,.15,'square',.04,200);
 }
-function toMenu(){$('mer').hidden=true;$('mgBtn').hidden=true;$('rlBtn').hidden=true;if(NET.ws)coopLeave();G=null;$('emBtn').hidden=true;$('emWheel').hidden=true;$('cw').hidden=true;$('am').hidden=true;$('hud').hidden=true;$('abar').hidden=true;$('go').hidden=true;$('banner').hidden=true;goto('menu');}
+function toMenu(){$('mer').hidden=true;$('mgBtn').hidden=true;$('rlBtn').hidden=true;$('qBtn').hidden=true;if(NET.ws)coopLeave();G=null;$('emBtn').hidden=true;$('emWheel').hidden=true;$('cw').hidden=true;$('am').hidden=true;$('hud').hidden=true;$('abar').hidden=true;$('go').hidden=true;$('banner').hidden=true;goto('menu');}
 $('goAgain').addEventListener('click',()=>{if(G.ps||G.guest){toMenu();}else if(G.tw)startTower(G.tw.w);else startRun(G.kind);});
 $('goMenu').addEventListener('click',toMenu);
 
@@ -3310,10 +3320,10 @@ function twMini(c){
 }
 /* ---------- menú, mejoras, invocación y colección ---------- */
 const RM=matchMedia('(prefers-reduced-motion:reduce)').matches;
-const SCREENS=['menu','cl','up','sh','gc','cd','bp','rk','st','co','lg','tl','lo','dm','tw','rt'];
+const SCREENS=['menu','cl','up','sh','gc','cd','bp','rk','st','co','lg','tg','tl','lo','dm','tw','rt'];
 function goto(id){
   HS();SCREENS.forEach(s=>{$(s).hidden=s!==id;}); $('gr').hidden=true;
-  if(id==='menu'){renderMenu();maybeNews();} else if(id==='dm')renderDm(); else if(id==='tw')renderTw(); else if(id==='rt')renderRt(); else if(id==='lg')renderLg(); else if(id==='tl')renderTier(); else if(id==='lo')renderLore(); else if(id==='cl')renderColl(); else if(id==='up')renderUp(); else if(id==='sh')renderShop(); else if(id==='bp')renderPass(); else if(id==='rk')renderRank(); else if(id==='cd'){coinPill($('cdWallet'));$('cdMsg').textContent='';$('cdMsg').className='info';$('acOut').value=acMake();$('acMsg').textContent='';$('acIn').value='';acArm=false;$('acLoad').textContent='Cargar partida';} else renderGacha();
+  if(id==='menu'){renderMenu();maybeNews();} else if(id==='dm')renderDm(); else if(id==='tw')renderTw(); else if(id==='rt')renderRt(); else if(id==='lg')renderLg(); else if(id==='tg')renderTg(); else if(id==='tl')renderTier(); else if(id==='lo')renderLore(); else if(id==='cl')renderColl(); else if(id==='up')renderUp(); else if(id==='sh')renderShop(); else if(id==='bp')renderPass(); else if(id==='rk')renderRank(); else if(id==='cd'){coinPill($('cdWallet'));$('cdMsg').textContent='';$('cdMsg').className='info';$('acOut').value=acMake();$('acMsg').textContent='';$('acIn').value='';acArm=false;$('acLoad').textContent='Cargar partida';} else renderGacha();
   $(id).scrollTop=0;
 }
 function setMute(v){mute=v;const t='Sonido: '+(v?'no':'sí');$('pzMute').textContent=t;$('mSound').textContent=t;$('stSound').textContent=t;}
@@ -3329,7 +3339,7 @@ const tagHtml=K=>'<span class="tagt" style="background:'+K.tcol+'">'+K.type+'</s
 function paintCreature(c,kind,stage,t,bg,sc,mv,sh){
   const x=c.getContext('2d'); x.imageSmoothingEnabled=false; x.clearRect(0,0,c.width,c.height);
   if(bg){x.fillStyle=bg;x.fillRect(0,0,c.width,c.height);}
-  x.save(); x.translate(Math.round(c.width/2),c.height-4); x.scale(sc,sc); drawCreature(x,kind,stage,t,1,!!mv,sh); x.restore();
+  x.save(); x.translate(Math.round(c.width/2),c.height-4); x.scale(sc*(kind==='primeris'?.62:1),sc*(kind==='primeris'?.62:1)); drawCreature(x,kind,stage,t,1,!!mv,sh); x.restore();
 }
 function silhouette(c){const x=c.getContext('2d');x.save();x.globalCompositeOperation='source-atop';x.fillStyle='rgba(8,6,20,.93)';x.fillRect(0,0,c.width,c.height);x.restore();}
 const ANIM={home:[],coll:[],gc:[]};
@@ -3383,6 +3393,7 @@ function renderMenu(){
   mkBtn($('mCoop'),'play','Cooperativo','Juega con un amigo');
   mkBtn($('mTier'),'book','Tier List','Qué bichos son los mejores');
   mkBtn($('mLore'),'book','Lore','La historia del Dios');
+  mkBtn($('mTg'),'rank','Etiquetas',tgCount()+' de '+Object.keys(TAGS).length+(SAVE.tag&&TAGS[SAVE.tag]?' · '+TAGS[SAVE.tag][0]:''));
   mkBtn($('mLg'),'rank','Logros',achDone()+' de '+ACH.length,achPending());
   mkBtn($('mDm'),'coin','Misiones',dmDone()+' de 3 hoy',dmPending());
   mkBtn($('mTw'),'flame','Torre (beta)','Sube piso por piso');
@@ -3448,6 +3459,8 @@ $('lgBack').addEventListener('click',()=>goto('menu'));
 $('rtBack').addEventListener('click',()=>goto('tw'));$('mTw').addEventListener('click',()=>goto('tw'));$('twBack').addEventListener('click',()=>goto('menu'));$('mDm').addEventListener('click',()=>goto('dm'));$('dmBack').addEventListener('click',()=>goto('menu'));
 $('mTier').addEventListener('click',()=>goto('tl'));
 $('mLore').addEventListener('click',()=>goto('lo'));
+$('mTg').addEventListener('click',()=>goto('tg'));
+$('tgBack').addEventListener('click',()=>goto('menu'));
 $('loBack').addEventListener('click',()=>goto('menu'));
 $('tlBack').addEventListener('click',()=>goto('menu'));
 $('rkBack').addEventListener('click',()=>goto('menu'));
@@ -3719,8 +3732,24 @@ const ABL={
  mamutin:['ERA GLACIAL',55,()=>{abFreeze(2.5,210);abNova(210,110,'#9ae8ff','#ffffff');G.buffD={t:4,mul:.4};}],
  lobin:['AULLIDO',45,()=>{abNova(150,80,'#9a8ab8','#ffffff');abBuff({spd:.4,dmg:.3},8,'Aullido');}],
  calabin:['COSECHA MALDITA',50,()=>{abStrikes(14,130,16,'pillar','#ff8a1a','#8aff4a',.4,.1,true);abHeal(.15);}],
+
+ primeris:['RAYO DIMENSIONAL',22,()=>{abStrikes(20,230,19,'bolt','#b066ff','#ffffff',.3,.07,false);abStrikes(10,230,28,'bolt','#d9b8ff','#ffffff',.5,.09,true);G.flash=.6;burst(G.p.x,G.p.y-8,36,'#b066ff');}],
  vampin:['SED CARMESÍ',50,()=>{const n=nearest(30,150).length;abNova(150,120,'#c82a4a','#ffffff');abHeal(Math.min(.5,.03*n));}]
 };
+const ABQ={
+ primeris:['DOMINIO ABSOLUTO',38,()=>{abFreeze(3,9999);abNova(230,340,'#7a45d6','#d9b8ff');abNova(130,220,'#ffffff','#b066ff');abHeal(.25);G.buffD={t:5,mul:.5};G.flash=.6;burst(G.p.x,G.p.y-8,44,'#7a45d6');}]
+};
+function qlTry(){
+  const g=G;if(!g||g.state!=='play'||g.guest||g.p.dead)return;const A=ABQ[g.kind];if(!A)return;
+  const ql=g.ql||(g.ql={cd:0});if(ql.cd>0)return;ql.cd=A[1];A[2]();
+  g.shake=Math.max(g.shake,.4);bannerAll('¡'+A[0]+'!',1600);beep(120,.5,'sawtooth',.07,-60);
+}
+function qlHud(g){
+  const b=$('qBtn');if(!b)return;if(g.state!=='play'||!ABQ[g.kind]){b.hidden=true;return;}
+  b.hidden=false;const ql=g.ql,nm=ABQ[g.kind][0];
+  if(ql&&ql.cd>0){b.textContent=nm+' '+Math.ceil(ql.cd);b.className='cd';}else{b.textContent='✦ '+nm+' (Q)';b.className='rdy';}
+}
+$('qBtn').addEventListener('click',()=>{const g=G;if(!g)return;if(g.guest)netSend({t:'ql'});else qlTry();});
 function abTry(){
   const g=G;if(!g||g.state!=='play'||g.guest||g.p.dead)return;const A=ABL[g.kind];if(!A)return;
   const rl=g.rl||(g.rl={on:0,t:0,cd:0});if(rl.cd>0)return;rl.cd=A[1];A[2]();
@@ -3737,7 +3766,7 @@ function rlTry(){
   if(CUR===0)rlShow(o[0],k);else netSend({t:'rlr',to:CUR,n:o[0],k});
 }
 function rlTick(dt){
-  const g=G,rl=g.rl;if(!rl)return;
+  const g=G;if(g.ql&&g.ql.cd>0)g.ql.cd=Math.max(0,g.ql.cd-dt);const rl=g.rl;if(!rl)return;
   if(rl.cd>0)rl.cd=Math.max(0,rl.cd-dt);
   if(rl.on){rl.t-=dt;if(g.p.dead)rl.t=0;if(rl.t<=0){rl.on=0;for(const q in rl.ap)g.st[q]-=rl.ap[q];rl.ap={};}}
 }
@@ -3777,7 +3806,7 @@ function megaFx(c,q,t){
   c.fillStyle=ac;for(let i=-2;i<=2;i++){const h=Math.round(5-Math.abs(i)*1.2+Math.sin(t*8+i));c.fillRect(i*3-1,-33-h,2,h+2);}
 }
 function megaHud(g){
-  rlHud(g);
+  rlHud(g);qlHud(g);
   const b=$('mgBtn');if(g.state==='over'){b.hidden=true;return;}
   const mg=g.mg,can=g.guest?!!g.mgc:!!(g.mgPaid||(SAVE.ms&&SAVE.ms[g.kind]));
   if(!can&&!(mg&&mg.on)){b.hidden=true;return;}
@@ -3791,7 +3820,7 @@ function megaHud(g){
 $('mgBtn').addEventListener('click',()=>{const g=G;if(!g)return;if(g.guest)netSend({t:'mega'});else megaTry();});
 $('spec').addEventListener('click',ev=>{const r=$('spec').getBoundingClientRect();SPEC.n+=(ev.clientX<r.left+r.width/2)?-1:1;});
 addEventListener('keydown',ev=>{if(G&&G.p.dead&&(G.ps||G.guest)&&!ev.repeat&&/^(KeyQ|KeyE|ArrowLeft|ArrowRight)$/.test(ev.code))SPEC.n+=(ev.code==='KeyQ'||ev.code==='ArrowLeft')?-1:1;});
-window.addEventListener('keydown',e=>{if(e.code==='KeyM'&&!e.repeat&&G)$('mgBtn').click();if(e.code==='KeyR'&&!e.repeat&&G)$('rlBtn').click();});
+window.addEventListener('keydown',e=>{if(e.code==='KeyM'&&!e.repeat&&G)$('mgBtn').click();if(e.code==='KeyR'&&!e.repeat&&G)$('rlBtn').click();if(e.code==='KeyQ'&&!e.repeat&&G&&!G.p.dead)$('qBtn').click();});
 $('rlBtn').addEventListener('click',()=>{const g=G;if(!g)return;if(g.guest)netSend({t:'rl'});else rlTry();});
 
 
@@ -4097,7 +4126,7 @@ const NEWS=[['🦴','Temporada 2: La Antigüedad','Llegan 95 bichos de eras perd
 ['🏆','Pase de la Antigüedad','Nuevo pase de 30 niveles con recompensas nuevas y un bicho exclusivo en el nivel 30.'],
 ['🗼','La Torre','Nuevo modo de juego: asciende por 5 mundos con jefes únicos, reliquias, tienda y ranking. Hay modo difícil, y quien llegue hasta la cima descubrirá lo que se esconde allí.'],
 ['🏅','37 logros nuevos','Más metas para todo tipo de jugador, algunas secretas.'],
-['🏺','Tickets de la Temporada 2','El gacha de la Temporada 2 usa tickets propios: 🏺 (los Ultra aceptan también los amarillos). Caen de enemigos (0.3%) y jefes (3%). Los tickets amarillos de antes solo sirven en el gacha de la Temporada 1.']];
+['🏺','Tickets de la Temporada 2','El gacha de la Temporada 2 usa tickets propios: 🏺 (los Ultra aceptan también los amarillos). Caen de enemigos (0.2%) y jefes (2%). Los tickets amarillos de antes solo sirven en el gacha de la Temporada 1.']];
 let newsShown=false;
 const TUT=()=>{const t=matchMedia('(pointer:coarse)').matches;return [
  ['🏃','Muévete',t?'Toca y arrastra en cualquier parte de la pantalla: aparece un joystick.':'Usa W A S D o las flechas del teclado. Con control, el stick izquierdo.'],
@@ -4452,8 +4481,36 @@ $('usDl').addEventListener('click',()=>{
 
 /* códigos */
 // Para agregar uno: 'CODIGO':{c:monedas,t:tickets}. Van en MAYÚSCULAS y sin acentos.
-const TAGS={owner:['👑 OWNER','#ffd24a','#2a1a00'],fundador:['FUNDADOR','#ff7a3a','#fff'],veterano:['VETERANO','#3a9aff','#fff'],antiguo:['ANTIGUO','#b8a888','#1a1408'],leyenda:['LEYENDA','#b066ff','#fff'],torre:['TORRE','#2ad8c0','#04201c']};
-function tagEl(id){const T=TAGS[id];const sp=document.createElement('span');sp.textContent=T[0];sp.style.cssText='display:inline-block;margin-right:5px;padding:0 5px;border-radius:5px;font-size:9px;font-weight:800;letter-spacing:.04em;vertical-align:middle;background:'+T[1]+';color:'+T[2];return sp;}
+const TAGS={owner:['👑 OWNER','#ffd24a','#2a1a00'],fundador:['FUNDADOR','#ff7a3a','#fff'],veterano:['VETERANO','#3a9aff','#fff'],antiguo:['ANTIGUO','#b8a888','#1a1408'],leyenda:['LEYENDA','#b066ff','#fff'],torre:['TORRE','#2ad8c0','#04201c'],
+ cazador:['CAZADOR','#7ac143','#0a1a00'],exterm:['EXTERMINADOR','#e04040','#fff'],superv:['SUPERVIVIENTE','#3ab0ff','#001828'],inmortal:['INMORTAL','#ffffff','#1a1a2a'],
+ coleccion:['COLECCIONISTA','#ff9ad5','#2a0a1a'],completo:['DEX COMPLETO','#ffd24a','#2a1a00'],brillo:['BRILLANTE','#fff27a','#2a2400'],cazashiny:['CAZASHINY','#7affea','#002a24'],
+ matajefes:['MATAJEFES','#b04a2a','#fff'],titan:['TITÁN','#8a2ae0','#fff'],pase:['PASE MAX','#ff7a3a','#fff'],deicida:['DEICIDA','#f0f0ff','#2a1a5a'],
+ equipo:['EN EQUIPO','#3aff9a','#002a14'],hardcore:['HARDCORE','#ff3a3a','#1a0000'],afortunado:['AFORTUNADO','#3aff7a','#00240c'],
+ ultra:['ULTRA','#ff4ad8','#fff'],vacio:['VACÍO','#5a2ad6','#e8d8ff'],origen:['ORIGEN','#c8a86a','#1a1204']};
+const TGA={cazador:'k1000',exterm:'k100000',superv:'t30',inmortal:'t60',coleccion:'o30',completo:'oAll',brillo:'sh5',cazashiny:'sh20',matajefes:'b50',titan:'b250',pase:'bp30',deicida:'dios',equipo:'coop25',hardcore:'hm10',afortunado:'gt1',ultra:'ult',vacio:'hcb',origen:'og'};
+const TGH=['ultra','vacio','origen'];
+const tgOk=id=>{AS();SAVE.tgU=SAVE.tgU||{};return !!(SAVE.tgU[id]||SAVE.tag===id||(TGA[id]&&SAVE.ach[TGA[id]]));};
+const tgCount=()=>Object.keys(TAGS).filter(tgOk).length;
+function renderTg(){
+  const box=$('tgList');box.innerHTML='';$('tgCount').textContent=tgCount()+' de '+Object.keys(TAGS).length;
+  const info=document.createElement('p');info.className='hint';info.textContent='Se desbloquean con logros. La que equipes aparece junto a tu nombre en los rankings.';box.appendChild(info);
+  const q=document.createElement('button');q.className='btn';q.textContent=SAVE.tag?'Quitar etiqueta equipada':'Sin etiqueta equipada';q.disabled=!SAVE.tag;
+  q.addEventListener('click',()=>{SAVE.tag='';persist();tagPost();renderTg();});box.appendChild(q);
+  const ids=Object.keys(TAGS).sort((a,b)=>(tgOk(b)?1:0)-(tgOk(a)?1:0));
+  for(const id of ids){
+    const ok=tgOk(id),row=document.createElement('div');row.style.cssText='display:flex;align-items:center;gap:8px;margin:8px 0;padding:8px;border-radius:10px;background:rgba(255,255,255,.06)';
+    const L=document.createElement('div');L.style.cssText='flex:0 0 auto;min-width:112px';
+    if(ok)L.appendChild(tagEl(id));else{const k=document.createElement('span');k.textContent='🔒 ???';k.style.cssText='font-size:10px;font-weight:800;opacity:.6';L.appendChild(k);}
+    row.appendChild(L);
+    const d=document.createElement('div');d.style.cssText='flex:1;font-size:11px;opacity:.85';
+    const a=TGA[id]&&ACH.find(x=>x.id===TGA[id]);
+    d.textContent=ok?(a?'Logro: '+a.name:'Etiqueta especial'):(TGH.includes(id)||!a?'Misteriosa':'Logro: '+a.name+' — '+a.desc);row.appendChild(d);
+    const b=document.createElement('button');b.className='mini';b.textContent=SAVE.tag===id?'Equipada':'Equipar';b.disabled=!ok||SAVE.tag===id;
+    b.addEventListener('click',()=>{if(id==='owner'){tgOwner(id);return;}SAVE.tag=id;persist();tagPost();renderTg();});row.appendChild(b);box.appendChild(row);
+  }
+}
+function tgOwner(id){const prev=SAVE.tag;SAVE.tag=id;tagPost(true).then(r=>{if(!r||!r.ok){SAVE.tag=prev;}persist();renderTg();});}
+function tagEl(id){const T=TAGS[id]||['','#444','#fff'];const sp=document.createElement('span');sp.textContent=T[0];sp.style.cssText='display:inline-block;margin-right:5px;padding:0 5px;border-radius:5px;font-size:9px;font-weight:800;letter-spacing:.04em;vertical-align:middle;background:'+T[1]+';color:'+T[2];return sp;}
 function tagPost(own){
   if(!SERVER_URL||!RK||!RK.uid)return Promise.resolve(null);
   const h={'Content-Type':'application/json'};if(own||SAVE.tag==='owner'){try{h['X-Owner']=localStorage.getItem('bs_ok')||'';}catch(e){}}
@@ -4462,6 +4519,14 @@ function tagPost(own){
 setTimeout(()=>{if(SAVE.tag)tagPost();},4000);
 const CODES={
  'LEYENDAS':{c:25000,y:6,s:1},
+ 'DONADORES':{c:6000,y:6,s:1},
+ 'MECENAS':{c:4000,y:4},
+ 'APOYO':{c:3000,y:3},
+ 'UNIDOS':{c:2500,y:3},
+ 'SEGUIDORES':{c:2000,y:4,t:1},
+ 'FAMILIABICHOS':{c:1500,y:2},
+ 'GRACIASTOTALES':{c:5000,y:5,s:1},
+ 'SUERTE':{c:1000,y:2,t:1},
  'ISRAELVIP':{c:5000},
  'TICKET2':{y:2},
  'MEGAPIEDRA':{y:5,s:1},
@@ -4493,6 +4558,14 @@ function redeem(){
       if(!r.ok){say('Clave de owner incorrecta.',false);return;}
       SAVE.x3=SAVE.x3?0:1;persist();say(SAVE.x3?'Modo ×3 ACTIVADO: monedas y drops (tickets, amuletos) ×3 en tus partidas. Escribe el código otra vez para quitarlo.':'Modo ×3 desactivado.',true);$('cdIn').value='';
     }).catch(()=>say('No pude conectar con el servidor.',false));return;}
+  if(k==='SHINYHOLLOW'){let key='';try{key=localStorage.getItem('bs_ok')||'';}catch(e){}
+    if(!SERVER_URL||!key){say('Este código solo funciona desde el link del servidor y con tu clave de owner.',false);return;}
+    if(!SAVE.owned.primeris){say('Primero tienes que tener a Hollowcrew.',false);return;}
+    say('Comprobando...',true);
+    fetch(SERVER_URL+'/ultras',{headers:{'X-Owner':key},cache:'no-store'}).then(r=>{
+      if(!r.ok){say('Clave de owner incorrecta.',false);return;}
+      SAVE.sh.primeris=1;SAVE.use.primeris=1;persist();say('¡Hollowcrew BRILLANTE desbloqueado y activado!',true);$('cdIn').value='';
+    }).catch(()=>say('No pude conectar con el servidor.',false));return;}
   if(k==='VERDES5'){let key='';try{key=localStorage.getItem('bs_ok')||'';}catch(e){}
     if(!SERVER_URL||!key){say('Este código solo funciona desde el link del servidor y con tu clave de owner.',false);return;}
     say('Comprobando...',true);
@@ -4508,11 +4581,11 @@ function redeem(){
       say(k==='EVENTO'?'¡Admin Abuse ACTIVADO! Recompensas ×2 para todos durante 24 horas.':'Evento terminado.',true);$('cdIn').value='';evFetch();
     }).catch(()=>say('No pude conectar con el servidor.',false));return;}
   {const TC={TAGFUNDADOR:'fundador',TAGVETERANO:'veterano',TAGANTIGUO:'antiguo',TAGLEYENDA:'leyenda',TAGTORRE:'torre',TAGQUITAR:''};
-   if(k in TC){SAVE.tag=TC[k];persist();tagPost();say(TC[k]?'¡Etiqueta '+TAGS[TC[k]][0]+' activada! Aparece junto a tu nombre en los rankings. Escribe TAGQUITAR para quitarla.':'Etiqueta quitada.',true);$('cdIn').value='';return;}}
+   if(k in TC){SAVE.tgU=SAVE.tgU||{};if(TC[k])SAVE.tgU[TC[k]]=1;SAVE.tag=TC[k];persist();tagPost();say(TC[k]?'¡Etiqueta '+TAGS[TC[k]][0]+' activada! Aparece junto a tu nombre en los rankings. Escribe TAGQUITAR para quitarla.':'Etiqueta quitada.',true);$('cdIn').value='';return;}}
   if(k==='ETIQUETAOWNER'){let key='';try{key=localStorage.getItem('bs_ok')||'';}catch(e){}
     if(!SERVER_URL||!key){say('Este código solo funciona desde el link del servidor y con tu clave de owner.',false);return;}
     say('Comprobando...',true);const prev=SAVE.tag;SAVE.tag='owner';
-    tagPost(true).then(r=>{if(!r||!r.ok){SAVE.tag=prev;say('Clave de owner incorrecta o servidor sin conexión.',false);return;}persist();say('¡Etiqueta 👑 OWNER activada! Aparece junto a tu nombre en los rankings.',true);$('cdIn').value='';});return;}
+    tagPost(true).then(r=>{if(!r||!r.ok){SAVE.tag=prev;say('Clave de owner incorrecta o servidor sin conexión.',false);return;}SAVE.tgU=SAVE.tgU||{};SAVE.tgU.owner=1;persist();say('¡Etiqueta 👑 OWNER activada! Aparece junto a tu nombre en los rankings.',true);$('cdIn').value='';});return;}
   if(k==='ULTRAS'){$('cdIn').value='';openUs();return;}
   if(k==='ANTIGUOS'){say('¡La Temporada 2 ya está activa para todos!',true);$('cdIn').value='';return;}
   const r=CODES[k];
