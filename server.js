@@ -16,6 +16,7 @@ const FILEU=process.env.DATA_FILE_U||path.join(__dirname,'ultras.json');
 let UDB={pulls:{},wins:[]};try{UDB=Object.assign(UDB,JSON.parse(fs.readFileSync(FILEU,'utf8')));}catch(e){}
 let dirtyU=false;
 setInterval(()=>{if(!dirtyU)return;dirtyU=false;try{fs.writeFileSync(FILEU,JSON.stringify(UDB));}catch(e){console.error('no pude guardar ultras',e.message);}},5000);
+const DCH={"discord": "605159b529f5009d3711b48caa7df8a3de0ca71a9a80a5828144a90791dbeb56", "dcdon": "c80719db5d3463920336ee8fe478a8a489899c17d167a066c94f84a9c3c442ca", "dcmod": "1b37c2f1a440daf99d6a71df4c3ff2b65823ab213941a9f989086bc2dfd126e4"};
 const FILEG=process.env.DATA_FILE_G||path.join(__dirname,'tags.json');
 let TG={};try{TG=JSON.parse(fs.readFileSync(FILEG,'utf8'))||{};}catch(e){}
 const saveTg=()=>{try{fs.writeFileSync(FILEG,JSON.stringify(TG));}catch(e){}};
@@ -96,8 +97,9 @@ const server=http.createServer((req,res)=>{
     req.on('end',()=>{let d={};try{d=JSON.parse(b);}catch(e){}
       const id=String(d.id||'').slice(0,40),tag=String(d.tag||'');
       if(id.length<8)return send(res,400,{error:'id'});
-      if(tag&&!TAGOK.includes(tag))return send(res,400,{error:'tag'});
+      if(tag&&!/^[a-z]{3,14}$/.test(tag))return send(res,400,{error:'tag'});
       if(tag==='owner'&&!isOwner(req.headers['x-owner']))return send(res,403,{error:'no'});
+      if(DCH[tag]&&require('crypto').createHash('sha256').update(String(d.code||'').toUpperCase()).digest('hex')!==DCH[tag])return send(res,403,{error:'code'});
       if(TG[id]==='owner'&&tag!=='owner'&&!isOwner(req.headers['x-owner']))return send(res,200,{ok:1,tag:TG[id]});
       if(tag)TG[id]=tag;else delete TG[id];saveTg();send(res,200,{ok:1,tag});});
     return;
