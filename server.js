@@ -12,6 +12,13 @@ setInterval(()=>{if(!dirtyT)return;dirtyT=false;try{fs.writeFileSync(FILET,JSON.
 const topT=n=>Object.entries(TDB).map(([id,r])=>Object.assign({id},r)).sort((a,b)=>b.f-a.f||(b.hd?1:0)-(a.hd?1:0)||a.tm-b.tm).slice(0,n);
 let dirty=false;
 setInterval(()=>{if(!dirty)return;dirty=false;try{fs.writeFileSync(FILE,JSON.stringify(DB));}catch(e){console.error('no pude guardar',e.message);}},5000);
+const FILEC=process.env.DATA_FILE_C||path.join(__dirname,'coliseo.json');
+let CDB={0:{},1:{}};try{CDB=Object.assign(CDB,JSON.parse(fs.readFileSync(FILEC,'utf8')));}catch(e){}
+let dirtyC=false;
+setInterval(()=>{if(!dirtyC)return;dirtyC=false;try{fs.writeFileSync(FILEC,JSON.stringify(CDB));}catch(e){console.error('no pude guardar coliseo',e.message);}},5000);
+/* mejor marca: victoria > ronda > dificultad > menor tiempo */
+const cBetter=(a,o)=>!o||(a.w-o.w||a.r-o.r||a.hd-o.hd||o.tm-a.tm)>0;
+const topC=(c,n)=>Object.entries(CDB[c]||{}).map(([id,r])=>Object.assign({id},r)).sort((a,b)=>b.w-a.w||b.r-a.r||b.hd-a.hd||a.tm-b.tm).slice(0,n);
 const FILEU=process.env.DATA_FILE_U||path.join(__dirname,'ultras.json');
 let UDB={pulls:{},wins:[]};try{UDB=Object.assign(UDB,JSON.parse(fs.readFileSync(FILEU,'utf8')));}catch(e){}
 let dirtyU=false;
@@ -24,10 +31,10 @@ const TAGOK=['owner','fundador','veterano','antiguo','leyenda','torre'];
 const FILEE=process.env.DATA_FILE_E||path.join(__dirname,'evento.json');
 let EVT={m:2,end:0};try{EVT=Object.assign(EVT,JSON.parse(fs.readFileSync(FILEE,'utf8')));}catch(e){}
 const saveEv=()=>{try{fs.writeFileSync(FILEE,JSON.stringify(EVT));}catch(e){}};
-const UNAME={u1:'Primesis',u2:'Primeris'};
+const UNAME={u1:'Primesis',u2:'Primeris',u3:'Dragón'};
 function ultStats(){
   const out={};
-  for(const u of ['u1','u2']){
+  for(const u of ['u1','u2','u3']){
     const P=UDB.pulls[u]||{y:0,g:0,pl:{}},W=UDB.wins.filter(w=>w.u===u),ids=new Set(W.map(w=>w.id)),sn=W.map(w=>w.since);
     out[u]={name:UNAME[u],players:Object.keys(P.pl||{}).length,y:P.y||0,g:P.g||0,total:(P.y||0)+(P.g||0),hits:W.length,winners:ids.size,
       byY:W.filter(w=>w.tk==='y').length,byG:W.filter(w=>w.tk==='g').length,
@@ -80,12 +87,30 @@ const server=http.createServer((req,res)=>{
     });
     return;
   }
+  if(req.method==='GET'&&u.pathname==='/coliseo'){
+    const id=u.searchParams.get('id'),c=u.searchParams.get('c')==='1'?1:0;
+    const rows=topC(c,30).map(r=>({name:r.name,r:r.r,hd:r.hd,w:r.w,n:r.n,tm:r.tm,kind:r.kind,sh:r.sh,id:r.id.slice(0,6),tag:TG[r.id]||''}));
+    return send(res,200,{rows,mine:id&&CDB[c]&&CDB[c][id]?CDB[c][id]:null});
+  }
+  if(req.method==='POST'&&u.pathname==='/coliseo'){
+    let b='';req.on('data',c=>{b+=c;if(b.length>2000)req.destroy();});
+    req.on('end',()=>{
+      let d;try{d=JSON.parse(b);}catch(e){return send(res,400,{error:'json'});}
+      const id=String(d.id||'').slice(0,40),name=String(d.name||'').trim().replace(/\s+/g,' ').slice(0,14),r=Math.floor(+d.r),hd=Math.floor(+d.hd)||0,w=d.w?1:0,c=d.c?1:0,n=Math.max(1,Math.min(4,Math.floor(+d.n)||1)),tm=Math.floor(+d.tm);
+      if(id.length<8||!name||!(r>=1&&r<=30)||!(hd>=0&&hd<=2)||!(tm>=1&&tm<=36000)||(w&&r<30))return send(res,400,{error:'datos'});
+      const now=Date.now(),k=id+'c';if(hits[k]&&now-hits[k]<1500)return send(res,429,{error:'muy rápido'});hits[k]=now;
+      const kind=String(d.kind||'').slice(0,20).replace(/[^a-z0-9_]/gi,''),row={name,r,hd,w,n,tm,kind,sh:!!d.sh,ts:now},old=CDB[c][id];
+      if(cBetter(row,old))CDB[c][id]=row;else if(old.name!==name)old.name=name;
+      dirtyC=true;send(res,200,{ok:true,mine:CDB[c][id]});
+    });
+    return;
+  }
   if(req.method==='POST'&&u.pathname==='/ultra'){
     let b='';req.on('data',c=>{b+=c;if(b.length>2000)req.destroy();});
     req.on('end',()=>{
       let d;try{d=JSON.parse(b);}catch(e){return send(res,400,{error:'json'});}
       const id=String(d.id||'').slice(0,40),name=String(d.name||'Anónimo').trim().replace(/\s+/g,' ').slice(0,14)||'Anónimo',uu=d.u,tk=d.tk,n=Math.floor(+d.n);
-      if(id.length<8||!(uu==='u1'||uu==='u2')||!(tk==='y'||tk==='g')||!(n>=1&&n<=50))return send(res,400,{error:'datos'});
+      if(id.length<8||!(uu==='u1'||uu==='u2'||uu==='u3')||!(tk==='y'||tk==='g')||!(n>=1&&n<=50))return send(res,400,{error:'datos'});
       const P=UDB.pulls[uu]=UDB.pulls[uu]||{y:0,g:0,pl:{}};P[tk]+=n;P.pl[id]=(P.pl[id]||0)+n;
       if(d.hit){const since=Math.floor(+d.hit.since);if(since>=1&&since<=1e7){UDB.wins.push({id,name,u:uu,tk,since,sh:!!d.hit.sh,ts:Date.now()});if(UDB.wins.length>5000)UDB.wins.shift();}}
       dirtyU=true;send(res,200,{ok:true});
